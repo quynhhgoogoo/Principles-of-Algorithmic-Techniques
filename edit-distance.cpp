@@ -614,9 +614,8 @@ bool check_instance(int n, int m, const char *a, const char *b)
 
 void solver(int n, int m, const char *a, const char *b, int &d)
 {
-    int **dp = new int *[n + 1];
- 
-    for (int i = 0; i <= n; i++)
+    int **dp = new int *[2];
+    for (int i = 0; i < 2; i++)
     {
         dp[i] = new int[m + 1];
     }
@@ -632,20 +631,21 @@ void solver(int n, int m, const char *a, const char *b, int &d)
  
             else if (j == 0)
             {
-                dp[i][j] = i;
+                dp[i%2][j] = i;
             }
             else if (a[i - 1] == b[j - 1])
             {
-                dp[i][j] = dp[i - 1][j - 1];
+                dp[i%2][j] = dp[(i - 1)%2][j - 1];
             }
             else
             {
-                dp[i][j] = 1 + std::min(std::min(dp[i][j - 1], dp[i - 1][j]), dp[i - 1][j - 1]);
+                dp[i%2][j] = 1 + std::min(std::min(dp[i%2][j - 1], dp[(i - 1)%2][j]), dp[(i - 1)%2][j - 1]);
             }
         }
+        
     }
-    d = dp[n][m];
-    for (int i = 0; i <= n; i++)
+    d = dp[n%2][m];
+    for (int i = 0; i < 2; i++)
     {
         delete[] dp[i];
     }
