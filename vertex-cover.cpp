@@ -1,5 +1,5 @@
 
-/*  Auto-built C++ source file 'set-cover.cpp'.  */
+/*  Auto-built C++ source file 'vertex-cover.cpp'.  */
 
 /******************************************************************************
 
@@ -7,65 +7,51 @@
   CS-E3190 Principles of Algorithmic Techniques
   Autumn 2022
 
-  Exercise: Set cover
+  Exercise: Vertex cover
 
   Description:
 
   This exercise asks you to implement an algorithm that computes a low-cost
-  set cover. More precisely, the input consists of a nonempty family
-  $\mathcal{F}=\{S_0,S_1,\ldots,S_{m-1}\}$ of nonempty subsets
-  $S_j\subseteq\{0,1,\ldots,n-1\}$ for $j=0,1,\ldots,m-1$.
-  A set $R\subseteq\{0,1,\ldots,m-1\}$ is a *set cover* if
-  for all $x\in\{0,1,\ldots,n-1\}$ there exists a $j\in R$ with $x\in S_j$.
-  The *cost* of a set cover $R$ is $c(R)=|R|$.
-  The *optimum cost* $\mathrm{OPT}$ of a set cover is the minimum cost of a
-  set cover, where the minimum is taken over all possible set covers; if no
-  set cover exists, the optimum is undefined. The algorithm must 
-  either
-  
-    1. output a set cover $R$ with cost $c(R)\leq H_q\cdot\mathrm{OPT}$,
-       where $q=\max_{j=0,1,\ldots,m-1}|S_j|$ and $H_q=1+2+\ldots+\frac{1}{q}$,
-       or
-    2. correctly assert that no set cover exists.
-  
-  For example, an implementation of the greedy set cover algorithm suffices
-  for this purpose.
+  vertex cover. More precisely, the input consists of an $n$-vertex, $m$-edge
+  undirected graph with a positive integer cost associated to each vertex.
+  A set of vertices is called a *vertex cover* if each edge has at least one
+  end-vertex in the set. The *cost* of a vertex cover is the sum of the costs
+  of its vertices. The *optimum cost* $\mathrm{OPT}$ of a vertex cover is the
+  minimum cost of a vertex cover, where the minimum is taken over all possible
+  vertex covers. The algorithm must output a vertex cover $S$ with cost at
+  most $2\cdot\mathrm{OPT}$. For example, an implementation of the primal-dual
+  vertex cover algorithm suffices for this purpose.
   
   **Your task** in this exercise is to complete the subroutine
                      
-  ``void solver(int n, int m, const int *p, const int *f, int &k, int *r)``
+  ``void solver(int n, int m, const int *e, const int *c, int &k, int *s)``
   
-  which should compute the size `k` and the elements `r` of a set cover as
+  which should compute the size `k` and the elements `s` of a vertex cover as
   described in the previous paragraph from the given input consisting of
-  positive integers `n` and `m`, as well as the arrays `p` and `f`, whose
+  positive integers `n` and `m`, as well as the arrays `c` and `e`, whose
   format is as follows.
   
-  The array `f` concatenates the sets $S_0,S_1,\ldots,S_{m-1}$.
-  That is, writing $S_{j}[0],S_{j}[1],\ldots,S_{j}[|S_j|-1]$ for the $|S_j|$
-  distinct elements of the set $S_j$, we have
-  $f=(S_{0}[0],S_{0}[1],\ldots,S_{0}[|S_0|-1],\ldots,S_{m-1}[0],S_{m-1}[1],\ldots,S_{m-1}[|S_{m-1}|-1])$.
-  
-  The array `p` satisfies $p[i]=\sum_{0\leq j<i}|S_j|$ for all $i=0,1,\ldots,m$.
-  Thus, the array `p` provides an index to the array `f` with
-  $S_j=\{f[p[j]],f[p[j]+1],\ldots,f[p[j+1]-1]\}$ for all $j=0,1,\ldots,m-1$. 
-  
-  For example, when $m=2$, $S_0=\{4,6,8\}$, and $S_1=\{7,9\}$,
-  we have $f=(4,6,8,7,9)$ and $p=(0,3,5)$.
-  
+  The array `e` concatenates the $m$ edges in the input graph.
+  That is, the $m$ edges of the graph are
+  $\{e[0],e[1]\},\{e[2],e[3]\},\ldots,\{e[2m-2],e[2m-1]\}$, with
+  $\{e[2i],e[2i+1]\}\subseteq\{0,1,\ldots,n-1\}$ and $e[2i]<e[2i+1]$
+  for all $i=0,1,\ldots,m-1$. The array `c` contains the cost $c[i]\geq 1$
+  of each vertex $i=0,1,\ldots,n-1$.
+                             
   The output of the subroutine should be as follows.
-  To give as output a set cover $R=\{j_0,j_1,\ldots,j_{k-1}\}$,
-  set `k` equal to $k$ and the element `r[i]` equal to $j_i$ for all
-  $i=0,1,\ldots,k-1$. When no set cover exists, set `k` equal to $0$. 
-  You may assume that $1\leq n\leq 1048576$, $0\leq m\leq 2097152$,
-  $0\leq p[m]\leq 16777216$, $0\leq k\leq n$, $q\leq 10$, and that the array
-  $r$ has capacity for at least $n$ elements. To locate the subroutine quickly,
-  you can search for "`???`" in the source file.
+  To give as output a vertex cover $S=\{j_0,j_1,\ldots,j_{k-1}\}$,
+  set `k` equal to $k$ and the element `s[i]` equal to $j_i$ for all
+  $i=0,1,\ldots,k-1$. 
+  You may assume that $2\leq n\leq 524288$, $1\leq m\leq 52428800$,
+  $1\leq k\leq n$, and that the array $s$ has capacity for at least $n$
+  elements. To locate the subroutine quickly, you can search for "`???`" in
+  the source file.
   
   *Grading*. This exercise awards you up to 10 points in 
   the course grading. The number of points awarded is the maximum points times
   the number of tests passed over the total number of tests, rounded up. To
   successfully complete a test, your implementation must use no more than
-  10 seconds of wall clock time and 1 GiB of memory. Each test
+  7 seconds of wall clock time and 512 MiB of memory. Each test
   will in general require the successful solution of one or more problem
   instances. In each batch of scaling tests, the first failed test will
   cause all subsequent tests in the batch to be skipped.
@@ -88,9 +74,7 @@
 #include <getopt.h>
 #include <omp.h>
 #include <immintrin.h>
-#include <bits/stdc++.h>
 #include <vector>
-#include <queue>
 #include <utility>
 
 /*************************************************** Simple error reporting. */
@@ -305,10 +289,10 @@ void operator delete(void *p,
 
 class TestContext;
 
-void solver(int n, int m, const int *p, const int *f, int &k, int *r);
+void solver(int n, int m, const int *e, const int *c, int &k, int *s);
 
 void pipe_out(TestContext &ctx,
-              int n, int m, const int *p, const int *f, int &k, int *r);
+              int n, int m, const int *e, const int *c, int &k, int *s);
 
 /* Testing context class. */
 
@@ -426,7 +410,7 @@ public:
                 /* Wait for ready signal from the child. */
                 unsigned int ready_signal;
                 recv(&ready_signal, sizeof(unsigned int), "ready");
-                if(good && ready_signal != 0xfadf1b09u) {
+                if(good && ready_signal != 0x0fe95617u) {
                     reason << "bad ready signal from child";
                     good = false;
                 }
@@ -591,17 +575,17 @@ public:
         }
     }
 
-    bool solve(int n, int m, const int *p, const int *f, int &k, int *r) {
+    bool solve(int n, int m, const int *e, const int *c, int &k, int *s) {
         started || DIE("not started");
         !ended  || DIE("already ended");
         good    || DIE("solve called on bad context");
         tick_t solve_start = track::now();
         if(!boxed) {
             /* Solve locally without boxing. */
-            solver(n, m, p, f, k, r);        
+            solver(n, m, e, c, k, s);        
         } else {
             /* Pipe to solver process. */            
-            pipe_out(*this, n, m, p, f, k, r);
+            pipe_out(*this, n, m, e, c, k, s);
         }
         tick_t solve_end = track::now();
         time_solve += solve_end - solve_start;
@@ -632,167 +616,81 @@ const char *TestContext::boxed_binary = NULL;
 
 /************************ Solver and select helper subroutines + unit tests. */
 
-bool check_instance(int n, int m, const int *p, const int *f)
+bool check_instance(int n, int m, const int *e, const int *c)
 {
-    /* Must have that q <= 10 and q divides n; otherwise return false. */
-    if(n <= 0 || m < 0 || p[0] != 0)
+    if(n <= 1 || m <= 0)
         return false;
-    for(int i = 0; i < m; i++)
-        if(p[i+1] - p[i] <= 0)
+    for(int j = 0; j < m; j++)
+        if(e[2*j] >= e[2*j+1])
             return false;
-    int *t = new int[p[m]];
-    int i = 0;
-    int q = 1;
-    for(; i < m; i++) {
-        int s = p[i];
-        int k = p[i+1] - s;
-        if(k > q) {
-            q = k;
-            if(q > 10)
-                break;
-        }
-        for(int j = 0; j < k; j++)
-            t[j] = f[s + j];
-        std::sort(t, t + k);
-        int j = 1;
-        for(; j < k; j++)
-            if(t[j-1] >= t[j])
-                break;
-        if(j < k)
-            break;
-        if(t[0] < 0 || t[k-1] >= n)
-            break;
-    }
-    delete[] t;
-    if(i < m)
-        return false;
-    if(n % q != 0)
-        return false;
+    for(int i = 0; i < n; i++)
+        if(c[i] <= 0)
+            return false;
     return true;
 }
 
-int udiff(bool *uncover_flag, pair<int, int> top, const int *p, const int *f)
+void solver(int n, int m, const int *e, const int *c, int &k, int *s)
 {
-    int uncover_elements = 0;
-    for(int i = p[top.second]; i < p[top.second + 1]; i++) {
-        if(uncover_flag[f[i]]) {
-            uncover_elements ++;
-        }    
+    std::vector<int> costs(c, c+n);
+    int v = 0; 
+    int dual_cost = 0; 
+    for (int i = 0; i < m; i++) {
+        int scost = std::min(costs[e[2 * i]], costs[e[2 * i + 1]]);
+        dual_cost += scost;
+        costs[e[2 * i]] -= scost; 
+        costs[e[2 * i + 1]] -= scost;
+                
+        if (costs[e[2 * i]] == 0) {
+            s[v] = e[2 * i]; 
+            v += 1; 
+        } 
+        if (costs[e[2 * i + 1]] == 0) {
+            s[v] = e[2 * i + 1];
+            v += 1;
+        }  	
     }
-    return (top.first - uncover_elements);
-}
-
-void solver(int n, int m, const int *p, const int *f, int &k, int *r)
-{
-    std::priority_queue<pair<int, int>> sets_queue;
-    bool *flag = new bool[n];               
-    int covered = 0;
-    int adding = -1;                          
-    k = 0;
-    std::fill_n (flag, n, true);
-    
-    for(int i = 0; i < m; i++) 
-    {
-        sets_queue.push(make_pair((p[i+1] - p[i]), i));
-    }
-    while(covered != n) {
-        if(adding == 0 || sets_queue.empty()) {
-            k = 0;
-            delete[] flag;
-            return;
-        }
-        auto curr_set = sets_queue.top();
-        sets_queue.pop();
-        r[k] = curr_set.second;
-        k ++;
-        adding = 0;
-        for(int i = p[curr_set.second]; i < p[curr_set.second + 1]; i++) 
-        {
-            if(flag[f[i]]) {
-                flag[f[i]] = false;
-                covered ++;
-                adding ++;
-            }
-        }
-        auto next_set = sets_queue.top();
-        int diff = udiff(flag, next_set, p, f);
-        while(diff != 0) {                                                
-            sets_queue.pop();
-            sets_queue.push(make_pair((next_set.first - diff), next_set.second));
-            next_set = sets_queue.top();
-            diff = udiff(flag, next_set, p, f);
-        }
-    }
-    delete[] flag;
+    k = v;
     return;
 }
 
-long fact(int q)
+bool check_soln(int n, int m, const int *e, const int *c,                
+                int k, const int *s, int optatmost)
 {
-    q >= 0 || DIE("negative q");
-    if(q == 0)
-        return 1;
-    else
-        return q*fact(q-1);
-}
-
-bool check_soln(int n, int m, const int *p, const int *f, int k, const int *r)
-{
-    /* Assumes that the optimum solution has cost n/q. */
-    check_instance(n, m, p, f) || DIE("bad instance");
-    bool *c = new bool[n];
+    check_instance(n, m, e, c) || DIE("bad instance");
+    if(k <= 0 || k > n)
+        return false;
     bool good = true;
+    int *b = new int[n];    
     for(int i = 0; i < n; i++)
-        c[i] = false;
-    /* Compute the largest set size q. */
-    int q = 1;
-    for(int i = 0; i < m; i++) {
-        int d = p[i+1] - p[i];
-        if(d > q)
-            q = d;
-    }
-    (q >= 1 && q <= 10 && n%q == 0) || DIE("bad q");
-    if(k > 0) {
-        if(k <= n) {
-            /* Check that we have a set cover. */
-            for(int j = 0; j < k; j++) {
-                int i = r[j];
-                int s = p[i];
-                int d = p[i+1] - p[i];
-                for(int j = 0; j < d; j++)
-                    c[f[s + j]] = true;
-            }
-            for(int i = 0; i < n; i++) {
-                if(!c[i]) {
-                    good = false;
-                    break;
-                }
-            }
-            /* Check that we are within the approximation factor. */
-            long fs = 0;
-            long fq = fact(q);
-                /* Will not overflow when n, q are within bounds. */
-            for(int i = 1; i <= q; i++)
-                fs += fq/i;    /* Exact division. */
-            if(fq*k > fs*(n/q))
-                good = false;
-                    /* k not within factor H_q = 1+1/2+...+1/q of n/q. */
+        b[i] = false;
+    int cost = 0;
+    for(int i = 0; i < k; i++) {
+        if(s[i] < 0 || s[i] >= n) {
+            /* Vertex number out of bounds. */
+            good = false;
+            break;                  
         } else {
-            good = false;
-        }
-    } else {
-        /* Check that no set cover exists. */
-        for(int j = 0; j < p[m]; j++)
-            c[f[j]] = true;
-        int i = 0;
-        for(; i < n; i++) {
-            if(!c[i])
+            if(b[s[i]]) {
+                /* Repeat vertex. */
+                good = false; 
                 break;
+            }
+            b[s[i]] = true;
+            cost += c[s[i]];
         }
-        if(i == n)
-            good = false;
     }
-    delete[] c;
+    for(int j = 0; j < m; j++) {
+        if((!b[e[2*j]]) && (!b[e[2*j+1]])) {
+            /* Edge not covered. */
+            good = false;
+            break;
+        }
+    }
+    if(cost > 2*optatmost) {
+        /* Not within approximation bound. */
+        good = false;
+    }
+    delete[] b;
     return good;
 }
 
@@ -811,101 +709,82 @@ void pipe_in(TestContext &ctx)
         ctx.guard();
 
         /* Allocate buffers. */
-        int *p = new int [m+1];
-        int *r = new int [n];
+        int *e = new int [2*m];
+        int *c = new int [n];
+        int *s = new int [n];
         
         /* Read input. */
-        ctx.recv(p, sizeof(int)*(m+1), "p");
+        ctx.recv(e, sizeof(int)*2*m, "e");
         ctx.guard();
 
-        /* Allocate further buffers. */
-        int *f = new int [p[m]];
-
         /* Read further input. */
-        ctx.recv(f, sizeof(int)*p[m], "f");
+        ctx.recv(c, sizeof(int)*n, "c");
         ctx.guard();
         
         /* Solve. */
         int k;
-        solver(n, m, p, f, k, r);
+        solver(n, m, e, c, k, s);
 
         /* Write output. */
-        ctx.send(&k, sizeof(int), "k");
+        ctx.send(&k, sizeof(int),  "k");
         ctx.guard();
-        ctx.send(r, sizeof(int)*k, "r");
+        ctx.send(s, sizeof(int)*k, "s");
         ctx.guard();
         
         /* Release buffers. */
-        delete[] r;
-        delete[] f;
-        delete[] p;
+        delete[] s;
+        delete[] c;
+        delete[] e;
     }
 }
 
 void pipe_out(TestContext &ctx,
-              int n, int m, const int *p, const int *f, int &k, int *r)
+              int n, int m, const int *e, const int *c, int &k, int *s)
 {
     /* Write preliminaries. */    
     ctx.send(&n, sizeof(int), "preliminaries");
     ctx.send(&m, sizeof(int), "preliminaries");
     
     /* Write input. */   
-    ctx.send(p, sizeof(int)*(m+1), "p");    
-    ctx.send(f, sizeof(int)*p[m],  "f");
+    ctx.send(e, sizeof(int)*2*m, "e");    
+    ctx.send(c, sizeof(int)*n,   "c");
     
     /* Read solver output. */    
     ctx.recv(&k, sizeof(int),  "k");
     if(k < 0 || k > n)
         return;
-    ctx.recv(r, sizeof(int)*k, "r");      
-}
-
-void perm_rand(std::mt19937 &g, int n, int *p)
-{
-    n >= 0 || DIE("bad input");
-    for(int i = 0; i < n; i++)
-        p[i] = i;
-    for(int i = 0; i < n-1; i++) {
-        std::uniform_int_distribution<> d(0,n-i-1);       
-        int x = i + d(g);
-        int t = p[x];
-        p[x] = p[i];
-        p[i] = t;
-    }
+    ctx.recv(s, sizeof(int)*k, "s");
 }
 
 void diagnostics(std::ostream &out,
-                 int n, int m, const int *p, const int *f, int k, const int *r)
+                 int n, int m, const int *e, const int *c,
+                 int k, const int *s,
+                 int optatmost)
 {
-    check_instance(n, m, p, f) || DIE("bad input");
-    int i = 0;
+    check_instance(n, m, e, c) || DIE("bad input");
     out << std::endl;
     if(n <= 10 && m <= 20) {
         out << "  n = " << n << ", m = " << m << std::endl;
-        for(; i < m; i++) {
-            out << "  S_{" << i << "} = {";
-            int s = p[i];
-            int d = p[i+1] - s;
-            for(int j = 0; j < d; j++) {
-                out << f[s+j];
-                if(j < d-1)
-                    out << ", ";
-                else
-                    out << "}";
-            }
-            out << std::endl;
+        for(int i = 0; i < m; i++) {
+            out << "  { e[" << 2*i << "], e[" << 2*i+1 
+                << "] } = {" << e[2*i] << ", " << e[2*i+1] << "}"
+                << std::endl;
         }
         out << "  k = " << k << std::endl;
         if(k > 0) {
-            out << "  R = {";
+            int cost = 0;
+            out << "  S = {";
             for(int j = 0; j < k && j < n; j++) {
-                out << r[j];
+                out << s[j];
+                cost += c[s[j]];
                 if(j < k-1 && j < n-1)
                     out << ", ";
                 else
                     out << "}";
             }
             out << std::endl;
+            out << "  cost      = " << cost << std::endl;
+            out << "  optatmost = " << optatmost << std::endl;
         }
     } else {
         out << "  [instance with n = " << n << " and m = " << m << ", suppressing diagnostics]"
@@ -915,52 +794,61 @@ void diagnostics(std::ostream &out,
 }
 
 void trial_rand(TestContext &ctx, std::mt19937 &g,
-                int n, int q, int c, bool have)
+                int n, int m, int k0, int cmax)
 {
-    (n > 0 && c > 0 && q > 0 && n % q == 0) || DIE("bad parameters");
-    int opt = n/q;
-    int m = c*(opt - (have ? 0 : 1));
-    int *rn = new int[n];
-    int *rm = new int[m];
-    perm_rand(g, m, rm);
-    int *p = new int[m+1];
-    for(int i = 0; i <= m; i++)
-        p[i] = q*i;
-    int *f = new int[p[m]];
+    (n > 0 && m > 0 && k0 > 0 && k0 <= n/2) || DIE("bad parameters");
+    int *c = new int[n];
+    int *e = new int[2*m];
+    int *s = new int[n];
+    bool *u = new bool[n];
+    for(int i = 0; i < n; i++)
+        u[i] = false;
+    int k1 = 0;
+    while(k1 < k0) {
+        std::uniform_int_distribution<> d(0,n-1);   
+        int i = d(g);
+        if(!u[i]) {
+            u[i] = true;
+            k1++;
+        }
+    }
+    int m1 = 0;
+    while(m1 < m) {
+        std::uniform_int_distribution<> d(0,n-1);   
+        int i = d(g);
+        int j = d(g);
+        if(j < i) {
+            int t = j;
+            j = i;
+            i = t;
+        }
+        if(i < j && ((!u[i]) || (!u[j]))) {
+            e[2*m1]   = i;
+            e[2*m1+1] = j;
+            m1++;
+        }           
+    }
+    int optatmost = 0;
+    for(int i = 0; i < n; i++) {
+        std::uniform_int_distribution<> d(1,cmax);
+        c[i] = d(g);
+        if(!u[i])
+            optatmost += c[i];
+    }
+
+    check_instance(n, m, e, c) || DIE("bad instance");
     int k;
-    int *r = new int[n];
-    std::uniform_int_distribution<> d(0,n-1);   
-    int hole = d(g);
-
-    int mp = 0;
-    for(int u = 0; u < c; u++) {
-        perm_rand(g, n, rn);
-        for(int i = 0; i < opt; i++) {
-            int j = 0;
-            for(; j < q; j++)
-                if(rn[q*i + j] == hole)
-                    break;
-            if(have || j == q) {
-                for(j = 0; j < q; j++)
-                    f[p[rm[mp]]+j] = rn[q*i + j];
-                std::sort(f + p[rm[mp]], f + p[rm[mp]+1]);
-                mp++;
-            }
-        }
-    }
-    check_instance(n, m, p, f) || DIE("bad instance");
-    if(ctx.solve(n, m, p, f, k, r)) {
-        if(!check_soln(n, m, p, f, k, r)) {
+    if(ctx.solve(n, m, e, c, k, s)) {
+        if(!check_soln(n, m, e, c, k, s, optatmost)) {
             ctx.fail() << "bad solution to instance " << ctx.count();
-            diagnostics(ctx.diagnostics(), n, m, p, f, k, r);
+            diagnostics(ctx.diagnostics(), n, m, e, c, k, s, optatmost);
         }
     }
 
-    delete[] rm;
-    delete[] rn;    
-    delete[] r;
-    delete[] f;
-    delete[] p;
+    delete[] u;
+    delete[] s;
+    delete[] e;
+    delete[] c;
 }
 
 bool tests(bool do_boxed)
@@ -969,20 +857,20 @@ bool tests(bool do_boxed)
 
     track::start();
     bool good = true;
-    for(int opt = 1; opt <= 30; opt++) {
-        int q = 3;
-        int n = q*opt;
-        int c = 5;
+    for(int n = 2; n <= 30; n++) {
+        int m = 100*n;
+        int k0 = n/2;
+        int cmax = 5;
         std::cerr << "test n = " << std::setw(3) << n
-                  << ", m = " << std::setw(3) << opt*c
-                  << ", p[m] = " << std::setw(3) << opt*c*q
+                  << ", m = " << std::setw(4) << m
+                  << ", k0 = " << std::setw(3) << k0
                   << " ... ";
         TestContext ctx;
         ctx.start(do_boxed,
-                  (tick_t) 10000*TICKS_IN_MSEC);
+                  (tick_t) 7000*TICKS_IN_MSEC);
         int repeats = 1000;
         for(int r = 0; !ctx.bad() && r < repeats; r++)
-            trial_rand(ctx, g, n, q, c, r % 2 == 0);
+            trial_rand(ctx, g, n, m, k0, cmax);
         ctx.end();
         if(ctx.bad()) {
             std::cerr << "FAIL [" << ctx.fail().str() << "]";
@@ -996,19 +884,19 @@ bool tests(bool do_boxed)
         if(ctx.bad())
             std::cerr << ctx.diagnostics().str();
     }
-    for(int opt = 1; opt <= 1 << 17; opt*=2) {
-        int q = 5;
-        int n = q*opt;
-        int c = 5;
+    for(int n = 1 << 10; n <= 1 << 19; n*=2) {
+        int m = 100*n;
+        int k0 = n/2;
+        int cmax = 5;
         std::cerr << "scaling test n = " << std::setw(7) << n
-                  << ", m = " << std::setw(7) << opt*c
-                  << ", p[m] = " << std::setw(8) << opt*c*q
+                  << ", m = " << std::setw(9) << m
+                  << ", k0 = " << std::setw(7) << k0
                   << " ... ";
         TestContext ctx;
         ctx.start(do_boxed,
-                  (tick_t) 10000*TICKS_IN_MSEC);
+                  (tick_t) 7000*TICKS_IN_MSEC);
         if(!ctx.bad())
-            trial_rand(ctx, g, n, q, c, true);
+            trial_rand(ctx, g, n, m, k0, cmax);
         ctx.end();
         if(ctx.bad()) {
             std::cerr << "FAIL [" << ctx.fail().str() << "]";
@@ -1052,7 +940,7 @@ int main(int argc, char * const *argv)
             break;
         default:
             const char *ex =
-                "Set cover";
+                "Vertex cover";
             std::cout
               << "Template for exercise '"<<ex<<"', CS-E3190 Autumn 2022\n"
               << "\n"
@@ -1082,7 +970,7 @@ int main(int argc, char * const *argv)
     } else {
         /* Start processing in piped-solver mode. */
         TestContext ctx;
-        unsigned int ready_signal = 0xfadf1b09;
+        unsigned int ready_signal = 0x0fe95617;
         ctx.send(&ready_signal, sizeof(unsigned int), "ready");
         ctx.guard();
         pipe_in(ctx);          
